@@ -12,6 +12,7 @@ useSeoMeta({
 // Composables
 const showExitPopup = ref(false)
 const formSubmitted = ref(false)
+const isSubmitting = ref(false)
 const counterValue = ref(0)
 
 // Form data
@@ -246,6 +247,8 @@ async function submitForm() {
   // Submit to Google Sheets
   const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyrjQePbsm-VyxG2BWej406M8yu7nysCFM-H8EaOy8Rj70DDCf8e5U0AbukhJXP5Jkzmw/exec'
   
+  isSubmitting.value = true
+  
   try {
     await fetch(GOOGLE_SHEETS_URL, {
       method: 'POST',
@@ -266,6 +269,8 @@ async function submitForm() {
   } catch (error) {
     console.error('Error:', error)
     formSubmitted.value = true
+  } finally {
+    isSubmitting.value = false
   }
 }
 
@@ -860,15 +865,45 @@ function showToast(message: string, type: 'info' | 'error' = 'info') {
               <input v-model="formData.filiere" type="text" id="filiere" name="filiere"
                 placeholder="Ta filière (ex: Médecine, Droit, Commerce...)" required>
             </div>
-            <button type="submit" class="btn btn-primary btn-lg btn-full btn-glow">
-              <span class="btn-text">Demander l'accès</span>
+            <button type="submit" class="btn btn-primary btn-lg btn-full btn-glow" :disabled="isSubmitting">
+              <span v-if="isSubmitting" class="btn-loading">
+                <svg class="spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" stroke-opacity="0.25"/>
+                  <path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/>
+                </svg>
+                Envoi en cours...
+              </span>
+              <span v-else>Demander l'accès</span>
             </button>
           </form>
 
           <div v-else class="success-message">
-            <div class="success-icon">🎉</div>
-            <h3>Bienvenue dans les 1% !</h3>
-            <p>Tu es maintenant pré-inscrit(e). On te contactera très bientôt avec tous les détails.</p>
+            <div class="success-badge">
+              <svg class="success-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M8 12l2.5 2.5L16 9" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h3>Candidature envoyée</h3>
+            <p class="success-main">Nous allons étudier ton profil afin de vérifier si tu es éligible à rejoindre <strong>Major</strong>.</p>
+            <div class="success-steps">
+              <div class="step">
+                <span class="step-number">1</span>
+                <span class="step-text">Analyse de ton profil</span>
+                <span class="step-status active">En cours...</span>
+              </div>
+              <div class="step">
+                <span class="step-number">2</span>
+                <span class="step-text">Vérification d'éligibilité</span>
+                <span class="step-status">À venir</span>
+              </div>
+              <div class="step">
+                <span class="step-number">3</span>
+                <span class="step-text">Réponse par email</span>
+                <span class="step-status">~20min</span>
+              </div>
+            </div>
+            <p class="success-note">📧 Vérifie ta boîte mail (et tes spams) dans les prochaines minutes.</p>
           </div>
         </div>
       </div>
