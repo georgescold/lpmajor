@@ -146,15 +146,13 @@ function initForm() {
             form.style.display = 'none';
             successMessage.style.display = 'block';
 
-            // Store in localStorage as backup
-            saveToLocalStorage(formData);
+
 
         } catch (error) {
             console.error('Error submitting form:', error);
-            // Still show success (the form data is saved locally)
+            // Still show success
             form.style.display = 'none';
             successMessage.style.display = 'block';
-            saveToLocalStorage(formData);
         }
     });
 }
@@ -207,15 +205,7 @@ function showToast(message, type = 'info') {
     }, 3000);
 }
 
-function saveToLocalStorage(data) {
-    try {
-        const existingData = JSON.parse(localStorage.getItem('majorInscriptions') || '[]');
-        existingData.push(data);
-        localStorage.setItem('majorInscriptions', JSON.stringify(existingData));
-    } catch (e) {
-        console.error('Error saving to localStorage:', e);
-    }
-}
+// localStorage backup removed for security
 
 // =============================================
 // SMOOTH SCROLL
@@ -465,4 +455,65 @@ function initExitIntent() {
     ctaBtn.addEventListener('click', function () {
         hidePopup();
     });
+}
+
+// =============================================
+// BLOG SECTION - TOGGLE FUNCTIONS
+// =============================================
+
+function toggleBlogCard(header) {
+    const card = header.closest('.blog-card');
+    if (!card) return;
+
+    // Close other expanded cards (optional - remove if you want multiple open)
+    const allCards = document.querySelectorAll('.blog-card.expanded');
+    allCards.forEach(otherCard => {
+        if (otherCard !== card) {
+            otherCard.classList.remove('expanded');
+        }
+    });
+
+    // Toggle current card
+    card.classList.toggle('expanded');
+
+    // Smooth scroll to card if expanding and it's partially out of view
+    if (card.classList.contains('expanded')) {
+        setTimeout(() => {
+            const cardRect = card.getBoundingClientRect();
+            if (cardRect.top < 80) {
+                card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }, 100);
+    }
+}
+
+function toggleAccordion(header) {
+    const item = header.closest('.accordion-item');
+    if (!item) return;
+
+    // Check if already open
+    const isOpen = item.classList.contains('open');
+
+    // Close all other items in the same accordion
+    const accordion = item.closest('.blog-accordion');
+    if (accordion) {
+        accordion.querySelectorAll('.accordion-item.open').forEach(openItem => {
+            if (openItem !== item) {
+                openItem.classList.remove('open');
+            }
+        });
+    }
+
+    // Toggle current item
+    item.classList.toggle('open');
+
+    // Smooth scroll if opening and item is partially out of view
+    if (!isOpen) {
+        setTimeout(() => {
+            const itemRect = item.getBoundingClientRect();
+            if (itemRect.top < 80 || itemRect.bottom > window.innerHeight) {
+                item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }, 100);
+    }
 }

@@ -36,11 +36,11 @@ const faqItems = [
   },
   {
     question: "Ça fonctionne pour toutes les filières ?",
-    answer: "Oui ! Que tu sois en médecine, droit, commerce, sciences ou lettres, l'algorithme s'adapte à ton contenu. Notre IA est entraînée sur tous types de cours."
+    answer: "Oui ! Que tu sois en médecine, droit, commerce, sciences, lettres ou même lycéen, l'algorithme s'adapte à ton contenu. Notre IA est entraînée sur tous types de cours."
   },
   {
-    question: "Pourquoi un tarif réduit à vie ?",
-    answer: "Nous lançons Major et avons besoin de premiers utilisateurs engagés. En échange de ton feedback, tu bénéficies d'un tarif préférentiel permanent. C'est gagnant-gagnant."
+    question: "Est-ce que Major est gratuit ?",
+    answer: "Oui ! L'essentiel de Major est 100% gratuit. Tu peux réviser, créer des flashcards et suivre ta progression sans rien payer. Quelques fonctionnalités premium optionnelles existent pour les plus ambitieux. Elles permettent de financer le développement et de garder l'app accessible à tous."
   },
   {
     question: "L'app est disponible sur quels appareils ?",
@@ -48,10 +48,56 @@ const faqItems = [
   }
 ]
 
-// Counter animation
-const counterTarget = 127
+// Counter - Base count + localStorage increment
+const BASE_COUNT = 127
+const counterTarget = ref(BASE_COUNT)
+
+// Load saved count from localStorage on mount
+function initCounter() {
+  if (typeof window !== 'undefined') {
+    const savedCount = localStorage.getItem('majorSignupCount')
+    if (savedCount) {
+      counterTarget.value = BASE_COUNT + parseInt(savedCount)
+    }
+  }
+}
+
+// Increment counter after successful signup
+function incrementCounter() {
+  if (typeof window !== 'undefined') {
+    const currentExtra = parseInt(localStorage.getItem('majorSignupCount') || '0')
+    const newExtra = currentExtra + 1
+    localStorage.setItem('majorSignupCount', newExtra.toString())
+    counterTarget.value = BASE_COUNT + newExtra
+    // Animate the increment
+    animateCounterIncrement()
+  }
+}
+
+function animateCounterIncrement() {
+  const oldValue = counterValue.value
+  const newValue = counterTarget.value
+  const duration = 800
+  const startTime = performance.now()
+  
+  function update(currentTime: number) {
+    const elapsed = currentTime - startTime
+    const progress = Math.min(elapsed / duration, 1)
+    const easeOut = 1 - Math.pow(1 - progress, 3)
+    counterValue.value = Math.floor(oldValue + (newValue - oldValue) * easeOut)
+    
+    if (progress < 1) {
+      requestAnimationFrame(update)
+    }
+  }
+  
+  requestAnimationFrame(update)
+}
 
 onMounted(() => {
+  // Load counter from localStorage
+  initCounter()
+  
   // Init reveal animations
   initRevealAnimations()
   
@@ -123,12 +169,13 @@ function initRevealAnimations() {
 function animateCounter() {
   const duration = 1500
   const startTime = performance.now()
+  const target = counterTarget.value
   
   function update(currentTime: number) {
     const elapsed = currentTime - startTime
     const progress = Math.min(elapsed / duration, 1)
     const easeOut = 1 - Math.pow(1 - progress, 3)
-    counterValue.value = Math.floor(counterTarget * easeOut)
+    counterValue.value = Math.floor(target * easeOut)
     
     if (progress < 1) {
       requestAnimationFrame(update)
@@ -264,6 +311,9 @@ async function submitForm() {
     const existing = JSON.parse(localStorage.getItem('majorInscriptions') || '[]')
     existing.push({ ...formData, timestamp: new Date().toISOString() })
     localStorage.setItem('majorInscriptions', JSON.stringify(existing))
+    
+    // Increment the visible counter
+    incrementCounter()
     
     formSubmitted.value = true
   } catch (error) {
@@ -589,7 +639,7 @@ function showToast(message: string, type: 'info' | 'error' = 'info') {
 
           <div class="testimonial-card">
             <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
-            <p class="testimonial-text">"L'IA génère mes flashcards en 2 minutes. Avant, je passais des heures à ficher.
+            <p class="testimonial-text">"Le programme génère mes flashcards en 2 minutes. Avant, je passais des heures à ficher.
               Major a littéralement sauvé mon semestre."</p>
             <div class="testimonial-author">
               <img src="/avatar_badge_3.png" alt="Emma L." class="testimonial-avatar">
@@ -884,7 +934,7 @@ function showToast(message: string, type: 'info' | 'error' = 'info') {
                 <path d="M8 12l2.5 2.5L16 9" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </div>
-            <h3>Candidature envoyée</h3>
+            <h3>Demande envoyée</h3>
             <p class="success-main">Nous allons étudier ton profil afin de vérifier si tu es éligible à rejoindre <strong>Major</strong>.</p>
             <div class="success-steps">
               <div class="step">

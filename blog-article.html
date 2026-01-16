@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:;">
+    <!-- Dynamic meta tags will be set by JS -->
+    <meta name="description" id="metaDescription" content="">
+    <meta name="author" content="Louis - Major">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph -->
+    <meta property="og:title" id="ogTitle" content="">
+    <meta property="og:description" id="ogDescription" content="">
+    <meta property="og:type" content="article">
+    <meta property="og:url" id="ogUrl" content="">
+
+    <title id="pageTitle">Blog Major</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Schema.org Article - will be populated by JS -->
+    <script type="application/ld+json" id="schemaOrg"></script>
+</head>
+
+<body class="blog-single-page">
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav container">
+            <a href="index.html" class="logo">
+                <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 8L4 16L20 24L36 16L20 8Z" fill="#0B1F3A" />
+                    <path d="M10 19V28C10 28 14 32 20 32C26 32 30 28 30 28V19L20 24L10 19Z" fill="#0B1F3A" />
+                    <path d="M32 17V26" stroke="#D4A72C" stroke-width="2" stroke-linecap="round" />
+                    <circle cx="32" cy="28" r="2" fill="#D4A72C" />
+                </svg>
+                <span class="logo-text">Major</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html#features">Fonctionnalités</a>
+                <a href="index.html#about">À propos</a>
+                <a href="index.html#faq">FAQ</a>
+                <a href="blog.html" class="active">Blog</a>
+            </div>
+            <a href="index.html#inscription" class="btn btn-primary btn-nav">S'inscrire gratuitement</a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="blog-single-main">
+        <div class="container">
+            <!-- Back Link -->
+            <a href="blog.html" class="blog-back-link">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Retour au blog
+            </a>
+
+            <!-- Article Container - Content loaded dynamically -->
+            <article id="articleContainer" class="blog-article-full" itemscope
+                itemtype="https://schema.org/BlogPosting">
+                <div class="loading-state">
+                    <p>Chargement de l'article...</p>
+                </div>
+            </article>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 8L4 16L20 24L36 16L20 8Z" fill="#0B1F3A" />
+                            <path d="M10 19V28C10 28 14 32 20 32C26 32 30 28 30 28V19L20 24L10 19Z" fill="#0B1F3A" />
+                            <path d="M32 17V26" stroke="#D4A72C" stroke-width="2" stroke-linecap="round" />
+                            <circle cx="32" cy="28" r="2" fill="#D4A72C" />
+                        </svg>
+                        <span class="logo-text">Major</span>
+                    </div>
+                    <p class="footer-tagline">D'étudiant moyen à numéro 1</p>
+                </div>
+
+                <div class="footer-links">
+                    <h5>Pages</h5>
+                    <a href="index.html#features">Fonctionnalités</a>
+                    <a href="index.html#about">À propos</a>
+                    <a href="index.html#faq">FAQ</a>
+                    <a href="blog.html">Blog</a>
+                </div>
+
+                <div class="footer-links">
+                    <h5>Légal</h5>
+                    <a href="pages/cgu.html">CGU</a>
+                    <a href="pages/confidentialite.html">Confidentialité</a>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>© 2026 Major. Tous droits réservés.</p>
+                <p class="security-line">🔒 Données sécurisées et protégées</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Security: Escape HTML to prevent XSS
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Get article slug from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const articleSlug = urlParams.get('article');
+
+        // Fetch and render article
+        async function loadArticle() {
+            try {
+                const response = await fetch('data/blog-articles.json');
+                const data = await response.json();
+
+                const article = data.articles.find(a => a.slug === articleSlug);
+
+                if (!article) {
+                    showError();
+                    return;
+                }
+
+                // Set dynamic meta tags
+                document.getElementById('pageTitle').textContent = article.metaTitle;
+                document.getElementById('metaDescription').content = article.metaDescription;
+                document.getElementById('ogTitle').content = article.metaTitle;
+                document.getElementById('ogDescription').content = article.metaDescription;
+                document.getElementById('ogUrl').content = `https://major-app.fr/blog-article.html?article=${article.slug}`;
+
+                // Set Schema.org
+                document.getElementById('schemaOrg').textContent = JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@type": "BlogPosting",
+                    "headline": article.title,
+                    "image": `https://major-app.fr/blog-${article.slug}.jpg`,
+                    "author": { "@type": "Person", "name": article.author.name },
+                    "publisher": {
+                        "@type": "Organization",
+                        "name": "Major",
+                        "logo": { "@type": "ImageObject", "url": "https://major-app.fr/logo.png" }
+                    },
+                    "datePublished": article.date,
+                    "dateModified": article.date,
+                    "description": article.metaDescription
+                });
+
+                // Render article
+                renderArticle(article);
+
+            } catch (error) {
+                console.error('Error loading article:', error);
+                showError();
+            }
+        }
+
+        function showError() {
+            document.getElementById('articleContainer').innerHTML = `
+                <div class="error-state">
+                    <h2>Article non trouvé</h2>
+                    <p>L'article demandé n'existe pas.</p>
+                    <a href="blog.html" class="btn btn-primary">Retour au blog</a>
+                </div>
+            `;
+        }
+
+        function renderArticle(article) {
+            const container = document.getElementById('articleContainer');
+
+            // Add featured class if applicable
+            if (article.featured) {
+                container.classList.add('article-featured');
+            }
+
+            let html = `
+                <header class="article-header centered-header">
+                    <div class="article-meta">
+                        <span class="blog-tag ${article.categoryClass}">${article.category}</span>
+                        <time datetime="${article.date}" itemprop="datePublished">${article.dateFormatted}</time>
+                        <span class="article-read-time">📖 ${article.readTime} min de lecture</span>
+                    </div>
+                    <h1 class="article-title-large" itemprop="headline">${article.title}</h1>
+                    <p class="article-lead" itemprop="description">${article.excerpt}</p>
+                </header>
+
+                <div class="article-hero-image">
+                    <div class="hero-image-placeholder ${article.heroGradient}"></div>
+                </div>
+
+                <div class="article-body" itemprop="articleBody">
+            `;
+
+            // Render content blocks
+            article.content.forEach(block => {
+                html += renderContentBlock(block);
+            });
+
+            html += `
+                </div>
+
+                <footer class="article-footer-single">
+                    <div class="author-card">
+                        <img src="${article.author.photo}" alt="${article.author.name}" class="author-avatar">
+                        <div class="author-details">
+                            <span class="author-label">Rédigé par</span>
+                            <span class="author-name-blog" itemprop="author">${article.author.name}</span>
+                            <span class="author-title">${article.author.role}</span>
+                        </div>
+                    </div>
+                </footer>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function renderContentBlock(block) {
+            switch (block.type) {
+                case 'intro':
+                    return `<p class="article-intro">${block.text}</p>`;
+
+                case 'paragraph':
+                    return `<p>${block.text}</p>`;
+
+                case 'heading':
+                    return `<h${block.level}>${block.text}</h${block.level}>`;
+
+                case 'quote':
+                    return `
+                        <blockquote class="article-quote">
+                            <p>"${block.text}"</p>
+                            <cite>— ${block.cite}</cite>
+                        </blockquote>
+                    `;
+
+                case 'steps':
+                    return `
+                        <div class="method-steps-blog">
+                            ${block.items.map((step, i) => `
+                                <div class="step-blog">
+                                    <div class="step-header">
+                                        <span class="step-num">${i + 1}</span>
+                                        <h4>${step.title}</h4>
+                                    </div>
+                                    <p>${step.text}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+
+                case 'callout':
+                    return `<div class="callout-blog"><p>${block.text}</p></div>`;
+
+                case 'scoreExamples':
+                    return `
+                        <div class="score-examples-blog">
+                            <div class="score-box score-high">
+                                <span class="score-percent">${block.high.percent}</span>
+                                <p>"${block.high.text}"</p>
+                            </div>
+                            <div class="score-box score-low">
+                                <span class="score-percent">${block.low.percent}</span>
+                                <p>"${block.low.text}"</p>
+                            </div>
+                        </div>
+                    `;
+
+                case 'stats':
+                    const cols = block.columns || 3;
+                    return `
+                        <div class="stats-grid-blog ${cols === 2 ? 'stats-2cols' : ''}">
+                            ${block.items.map(stat => `
+                                <div class="stat-item-blog">
+                                    <span class="stat-value">${stat.value}</span>
+                                    <span class="stat-desc">${stat.desc}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+
+                case 'references':
+                    return `
+                        <ul class="references-list">
+                            ${block.items.map(ref => `<li>${ref}</li>`).join('')}
+                        </ul>
+                    `;
+
+                case 'rules':
+                    return `
+                        <ol class="rules-list">
+                            ${block.items.map(rule => `<li>${rule}</li>`).join('')}
+                        </ol>
+                    `;
+
+                case 'list':
+                    return `
+                        <ul class="blog-list-styled">
+                            ${block.items.map(item => `<li>${item}</li>`).join('')}
+                        </ul>
+                    `;
+
+                case 'authorIntro':
+                    return `
+                        <div class="author-intro-blog">
+                            <img src="louis-photo.jpg" alt="${block.name}" class="author-photo-large">
+                            <div class="author-intro-text">
+                                <p class="author-intro-name">${block.name}</p>
+                                <p class="author-intro-role">${block.role}</p>
+                            </div>
+                        </div>
+                    `;
+
+                case 'pyramid':
+                    return `
+                        <div class="pyramid-blog">
+                            ${block.levels.map((level, i) => `
+                                <div class="pyramid-level level-${i + 1}">
+                                    <span class="level-students">${level.students}</span>
+                                    <span class="level-filter">${level.filter}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+
+                case 'principles':
+                    return block.items.map(p => `
+                        <div class="principle-blog ${p.highlight ? 'principle-highlight' : ''}">
+                            <div class="principle-header">
+                                <span class="principle-num">${p.num}</span>
+                                <h4>${p.title}</h4>
+                            </div>
+                            <p>${p.text}</p>
+                        </div>
+                    `).join('');
+
+                case 'tips':
+                    return `
+                        <div class="tips-box-blog">
+                            <h4>${block.title}</h4>
+                            <ul>
+                                ${block.items.map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+
+                case 'finalQuote':
+                    return `
+                        <blockquote class="final-quote-blog">
+                            <p>${block.text}</p>
+                            <p>${block.subtext}</p>
+                        </blockquote>
+                    `;
+
+                case 'features':
+                    return `
+                        <div class="features-blog">
+                            ${block.items.map(f => `
+                                <div class="feature-blog-item">
+                                    <span class="feature-icon-blog">${f.icon}</span>
+                                    <div>
+                                        <h4>${f.title}</h4>
+                                        <p>${f.text}</p>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+
+                case 'cta':
+                    return `
+                        <div class="article-cta ${block.featured ? 'article-cta-featured' : ''}">
+                            <h4>${block.title}</h4>
+                            <p>${block.text}</p>
+                            <a href="${block.buttonLink}" class="btn btn-primary btn-lg">${block.buttonText}</a>
+                        </div>
+                    `;
+
+                default:
+                    return '';
+            }
+        }
+
+        // Load the article on page load
+        if (articleSlug) {
+            loadArticle();
+        } else {
+            showError();
+        }
+    </script>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

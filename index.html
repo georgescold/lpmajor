@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:;">
     <meta name="description"
         content="Major - L'outil universitaire le plus puissant jamais créé. Pré-inscris-toi maintenant pour bénéficier d'un tarif réduit à vie.">
     <title>Major | D'étudiant moyen à numéro 1</title>
@@ -39,10 +41,10 @@
                 <span class="logo-text">Major</span>
             </a>
             <div class="nav-links">
-                <a href="#features">Fonctionnalités</a>
                 <a href="#features">Comment ça marche</a>
                 <a href="#about">À propos</a>
                 <a href="#faq">FAQ</a>
+                <a href="blog.html">Blog</a>
             </div>
             <a href="#inscription" class="btn btn-primary btn-nav">S'inscrire gratuitement</a>
         </nav>
@@ -611,6 +613,119 @@
         </div>
     </section>
 
+    <!-- Blog Section - Nos Publications (Preview) -->
+    <section class="blog" id="blog">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-badge">Nos publications</span>
+                <h2 class="section-title">Ressources pour étudiants ambitieux</h2>
+                <p class="section-subtitle">Des conseils actionnables basés sur la science pour exceller dans tes études
+                </p>
+            </div>
+
+            <div class="blog-grid reveal">
+                <!-- Article 1: Réviser efficacement -->
+                <a href="blog-article.html?article=reviser-efficacement" class="blog-card-link">
+                    <article class="blog-card">
+                        <div class="blog-card-header">
+                            <div class="blog-card-meta">
+                                <span class="blog-tag tag-science">Sciences cognitives</span>
+                                <span class="blog-read-time">📖 4 min</span>
+                            </div>
+                            <h3 class="blog-card-title">Comment réviser efficacement ? Ce que dit la science</h3>
+                            <p class="blog-card-excerpt">Découvre la méthode Major : un système de révision basé sur les
+                                sciences cognitives qui transforme ta façon d'apprendre.</p>
+                            <div class="blog-card-toggle">
+                                <span>Lire l'article</span>
+                                <svg class="toggle-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <polyline points="9 6 15 12 9 18"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                    </article>
+                </a>
+
+                <!-- Article 2: Flashcards -->
+                <a href="blog-article.html?article=flashcards" class="blog-card-link">
+                    <article class="blog-card">
+                        <div class="blog-card-header">
+                            <div class="blog-card-meta">
+                                <span class="blog-tag tag-method">Méthodes</span>
+                                <span class="blog-read-time">📖 3 min</span>
+                            </div>
+                            <h3 class="blog-card-title">Pourquoi les flashcards sont l'arme secrète des meilleurs
+                                étudiants</h3>
+                            <p class="blog-card-excerpt">Les étudiants en médecine, droit et prépa l'ont compris depuis
+                                longtemps. Voici pourquoi tu devrais les adopter.</p>
+                            <div class="blog-card-toggle">
+                                <span>Lire l'article</span>
+                                <svg class="toggle-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <polyline points="9 6 15 12 9 18"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                    </article>
+                </a>
+
+                <!-- Article 3: Major de promo (Featured) -->
+                <a href="blog-article.html?article=major-de-promo" class="blog-card-link blog-card-link-featured">
+                    <article class="blog-card blog-card-featured">
+                        <div class="blog-card-header">
+                            <div class="blog-card-meta">
+                                <span class="blog-tag tag-guide">Guide complet</span>
+                                <span class="blog-read-time">📖 8 min</span>
+                            </div>
+                            <h3 class="blog-card-title">Comment devenir major de promo : le guide complet</h3>
+                            <p class="blog-card-excerpt">De 11 de moyenne au lycée à major de promo en fac. Mon parcours
+                                et les 8 principes qui font vraiment la différence.</p>
+                            <div class="blog-card-toggle">
+                                <span>Lire le guide</span>
+                                <svg class="toggle-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <polyline points="9 6 15 12 9 18"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                    </article>
+                </a>
+
+                <!-- Article 4: Gamification -->
+                <a href="blog-article.html?article=gamification" class="blog-card-link">
+                    <article class="blog-card">
+                        <div class="blog-card-header">
+                            <div class="blog-card-meta">
+                                <span class="blog-tag tag-motivation">Motivation</span>
+                                <span class="blog-read-time">📖 2 min</span>
+                            </div>
+                            <h3 class="blog-card-title">Gamification et études : comment les meilleurs restent motivés
+                            </h3>
+                            <p class="blog-card-excerpt">Pourquoi tu procrastines sur tes révisions mais pas sur tes
+                                jeux vidéo ? La réponse pourrait changer ta façon d'étudier.</p>
+                            <div class="blog-card-toggle">
+                                <span>Lire l'article</span>
+                                <svg class="toggle-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <polyline points="9 6 15 12 9 18"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                    </article>
+                </a>
+            </div>
+
+            <div class="blog-view-all reveal">
+                <a href="blog.html" class="btn btn-secondary btn-lg">
+                    Voir tous les articles
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
     <!-- Final CTA Section -->
     <section class="final-cta" id="inscription">
         <div class="container">
@@ -665,16 +780,16 @@
 
                 <div class="footer-links">
                     <h5>Pages</h5>
-                    <a href="#features">Fonctionnalités</a>
-                    <a href="#pillars">Comment ça marche</a>
+                    <a href="#features">Comment ça marche</a>
                     <a href="#about">À propos</a>
                     <a href="#faq">FAQ</a>
+                    <a href="blog.html">Blog</a>
                 </div>
 
                 <div class="footer-links">
                     <h5>Légal</h5>
-                    <a href="#">CGU</a>
-                    <a href="#">Confidentialité</a>
+                    <a href="cgu.html">CGU</a>
+                    <a href="confidentialite.html">Confidentialité</a>
                 </div>
             </div>
 

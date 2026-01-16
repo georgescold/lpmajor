@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:;">
+    <meta name="description"
+        content="Blog Major - Découvrez des conseils scientifiquement prouvés pour réviser efficacement, utiliser les flashcards et devenir major de promo. Ressources gratuites pour étudiants ambitieux.">
+    <meta name="keywords"
+        content="réviser efficacement, flashcards, major de promo, méthodes révision, sciences cognitives, gamification études">
+    <meta name="author" content="Louis - Major">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://major-app.fr/blog.html">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Blog Major | Ressources pour étudiants ambitieux">
+    <meta property="og:description"
+        content="Conseils scientifiquement prouvés pour réviser efficacement et devenir le meilleur de ta promo.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://major-app.fr/blog.html">
+
+    <title>Blog Major | Ressources pour étudiants ambitieux</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="blog-index-page">
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav container">
+            <a href="index.html" class="logo">
+                <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 8L4 16L20 24L36 16L20 8Z" fill="#0B1F3A" />
+                    <path d="M10 19V28C10 28 14 32 20 32C26 32 30 28 30 28V19L20 24L10 19Z" fill="#0B1F3A" />
+                    <path d="M32 17V26" stroke="#D4A72C" stroke-width="2" stroke-linecap="round" />
+                    <circle cx="32" cy="28" r="2" fill="#D4A72C" />
+                </svg>
+                <span class="logo-text">Major</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html#features">Fonctionnalités</a>
+                <a href="index.html#about">À propos</a>
+                <a href="index.html#faq">FAQ</a>
+                <a href="blog.html" class="active">Blog</a>
+            </div>
+            <a href="index.html#inscription" class="btn btn-primary btn-nav">S'inscrire gratuitement</a>
+        </nav>
+    </header>
+
+    <!-- Blog Index Hero -->
+    <section class="blog-hero">
+        <div class="container">
+            <div class="blog-hero-content">
+                <span class="section-badge">Le Blog Major</span>
+                <h1 class="blog-hero-title">Conseils pour étudiants ambitieux</h1>
+                <p class="blog-hero-subtitle">Des méthodes validées par la science pour exceller dans tes études.</p>
+
+                <div class="blog-hero-cta">
+                    <a href="index.html#inscription" class="btn btn-primary btn-lg">Commencer maintenant</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Grid -->
+    <main class="blog-index-main">
+        <div class="container">
+            <div id="blogGrid" class="blog-index-grid">
+                <!-- Cards loaded dynamically from JSON -->
+                <div class="loading-state">
+                    <p>Chargement des articles...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 8L4 16L20 24L36 16L20 8Z" fill="#0B1F3A" />
+                            <path d="M10 19V28C10 28 14 32 20 32C26 32 30 28 30 28V19L20 24L10 19Z" fill="#0B1F3A" />
+                            <path d="M32 17V26" stroke="#D4A72C" stroke-width="2" stroke-linecap="round" />
+                            <circle cx="32" cy="28" r="2" fill="#D4A72C" />
+                        </svg>
+                        <span class="logo-text">Major</span>
+                    </div>
+                    <p class="footer-tagline">D'étudiant moyen à numéro 1</p>
+                </div>
+
+                <div class="footer-links">
+                    <h5>Pages</h5>
+                    <a href="index.html#features">Fonctionnalités</a>
+                    <a href="index.html#about">À propos</a>
+                    <a href="index.html#faq">FAQ</a>
+                    <a href="blog.html">Blog</a>
+                </div>
+
+                <div class="footer-links">
+                    <h5>Légal</h5>
+                    <a href="pages/cgu.html">CGU</a>
+                    <a href="pages/confidentialite.html">Confidentialité</a>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>© 2026 Major. Tous droits réservés.</p>
+                <p class="security-line">🔒 Données sécurisées et protégées</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Security: Escape HTML to prevent XSS
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Load articles from JSON and render grid
+        async function loadBlogGrid() {
+            try {
+                const response = await fetch('data/blog-articles.json');
+                const data = await response.json();
+
+                const grid = document.getElementById('blogGrid');
+
+                // Sort articles by date (newest first)
+                const sortedArticles = data.articles.sort((a, b) =>
+                    new Date(b.date) - new Date(a.date)
+                );
+
+                grid.innerHTML = sortedArticles.map(article => `
+                    <a href="blog-article.html?article=${escapeHtml(article.slug)}" class="blog-index-card ${article.featured ? 'card-featured' : ''}">
+                        <div class="card-image-wrapper">
+                            <div class="card-placeholder-image ${escapeHtml(article.heroGradient)}"></div>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-meta">
+                                <span class="blog-tag ${escapeHtml(article.categoryClass)}">${escapeHtml(article.category)}</span>
+                                <span class="read-time">${article.readTime} min</span>
+                            </div>
+                            <h2 class="card-title">${escapeHtml(article.title)}</h2>
+                            <p class="card-excerpt">${escapeHtml(article.excerpt)}</p>
+                            <span class="card-link-text">Lire l'article →</span>
+                        </div>
+                    </a>
+                `).join('');
+
+            } catch (error) {
+                console.error('Error loading blog articles:', error);
+                document.getElementById('blogGrid').innerHTML = `
+                    <div class="error-state">
+                        <p>Erreur lors du chargement des articles.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Load on page ready
+        loadBlogGrid();
+    </script>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
